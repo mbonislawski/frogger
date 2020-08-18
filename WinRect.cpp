@@ -23,12 +23,12 @@ void WinRect::checkCollision() {
     QList<QGraphicsItem *> colliding_items = collidingItems();
 
     for (int i = 0, n = colliding_items.size(); i < n;  ++i) {
-        this->setBrush(Qt::red);
         if (colliding_items[i]->flags()) {
-            game->displayGameOverWindow("Game is over");
+            game->runNextLevel();
         } else {
-            scene()->removeItem(colliding_items[i]);
-            delete colliding_items[i];
+            srand ( (unsigned)time(NULL) );
+            int randomPosition = rand() % 1500;
+            this->setPos(randomPosition, 0);
         }
     }
 }

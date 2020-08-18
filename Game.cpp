@@ -17,7 +17,7 @@ Game::Game(QWidget *) {
 
     viewWidth = 1600;
     viewHeight = 1000;
-    level = 5;
+    level = 1;
 
     // create a scene
     scene = new QGraphicsScene();
@@ -119,4 +119,10 @@ void Game::displayMainMenu(){
     playButton->setPos(bxPos,byPos);
     connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
     scene->addItem(playButton);
+}
+
+void Game::runNextLevel() {
+    this->level = this->level + 1;
+    scene->clear();
+    start();
 }
