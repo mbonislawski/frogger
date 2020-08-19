@@ -8,6 +8,7 @@ class WinRect:public QObject, public QGraphicsRectItem {
     Q_OBJECT
 public:
     WinRect();
+    int position;
 public slots:
     void checkCollision();
 };

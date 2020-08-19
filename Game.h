@@ -12,6 +12,7 @@ public:
     Game(QWidget * parent=0);
     void displayMainMenu();
     void runNextLevel();
+    void showLevel();
     void displayGameOverWindow(QString textToDisplay);
 
     QGraphicsScene * scene;
@@ -20,6 +21,7 @@ public:
     int level;
     int lastCarPos = 0;
     int lastCarType = 0;
+    QVector<int> winPointsArr;
 
 public slots:
     void restartGame();

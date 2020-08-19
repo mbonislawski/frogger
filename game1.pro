@@ -20,6 +20,7 @@ SOURCES += \
     Car.cpp \
     Frog.cpp \
     Game.cpp \
+    LoseRect.cpp \
     WinRect.cpp \
     main.cpp
 
@@ -28,6 +29,7 @@ HEADERS += \
     Car.h \
     Frog.h \
     Game.h \
+    LoseRect.h \
     WinRect.h
 
 FORMS += \

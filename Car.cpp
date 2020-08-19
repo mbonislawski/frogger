@@ -71,13 +71,12 @@ void Car::checkCarsCollision() {
 
     for (int i = 0, n = colliding_items.size(); i < n;  ++i) {
         // delete
-        this->setBrush(Qt::red);
-        if (colliding_items[i]->flags()) {
+        if (colliding_items[i]->flags().testFlag(ItemIsFocusable)) {
             game->displayGameOverWindow("Game is over");
         } else {
             scene()->removeItem(colliding_items[i]);
             delete colliding_items[i];
-//            delete this;
+            delete this;
         }
     }
 }

@@ -8,10 +8,12 @@
 #include <QGraphicsView>
 #include <Frog.h>
 #include <WinRect.h>
+#include <LoseRect.h>
 #include "Button.h"
 #include <QGraphicsTextItem>
 #include <stdlib.h> // srand() and rand()
 #include <time.h> // time()
+#include <QFont>
 
 Game::Game(QWidget *) {
 
@@ -36,6 +38,7 @@ Game::Game(QWidget *) {
 void Game::start(){
     // clear the screen
     scene->clear();
+    winPointsArr.remove(0, winPointsArr.size());
 
     // create a player
     Frog * frog = new Frog(this->viewWidth, this->viewHeight);
@@ -54,6 +57,17 @@ void Game::start(){
     QTimer * timer = new QTimer();
     QTimer * timerCollision = new QTimer();
 
+    for (int i = 0; i < 1600; i = i+100) {
+        qDebug() << winPointsArr << " " << winPointsArr.indexOf(i) << " " << i;
+        if (winPointsArr.indexOf(i) == -1) {
+            LoseRect * losePoint = new LoseRect(i);
+            scene->addItem(losePoint);
+            connect(timerCollision, SIGNAL(timeout()), losePoint, SLOT(checkCollision()));
+        }
+    }
+
+    showLevel();
+
     // spawn enemies
     connect(timer, SIGNAL(timeout()), frog, SLOT(spawnCar()));
     timer->start(2000 / level);
@@ -62,12 +76,14 @@ void Game::start(){
     connect(timerCollision, SIGNAL(timeout()), winPoint1, SLOT(checkCollision()));
     connect(timerCollision, SIGNAL(timeout()), winPoint2, SLOT(checkCollision()));
     connect(timerCollision, SIGNAL(timeout()), winPoint3, SLOT(checkCollision()));
+
     timerCollision->start();
 
     show();
 }
 
 void Game::restartGame(){
+    level = 1;
     scene->clear();
     start();
 }
@@ -80,6 +96,17 @@ void Game::drawPanel(int x, int y, int width, int height, QColor color){
     brush.setColor(color);
     panel->setBrush(brush);
     scene->addItem(panel);
+}
+
+void Game::showLevel () {
+    QGraphicsTextItem* levelText = new QGraphicsTextItem(QString("Level: ") +  QString::number(level));
+    QFont titleFont("comic sans",20);
+    levelText->setDefaultTextColor(Qt::black);
+    levelText->setFont(titleFont);
+    int txPos = 20;
+    int tyPos = 950;
+    levelText->setPos(txPos,tyPos);
+    scene->addItem(levelText);
 }
 
 void Game::displayGameOverWindow(QString textToDisplay){
