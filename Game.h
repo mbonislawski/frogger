@@ -22,10 +22,15 @@ public:
     int lastCarPos = 0;
     int lastCarType = 0;
     QVector<int> winPointsArr;
+    int timerVal;
+    QMetaObject::Connection spawnConnection;
 
 public slots:
     void restartGame();
     void start();
+    void increaseLevel();
+    void resetLevel();
+    void spawnCar();
 
 private:
     void drawPanel(int x, int y, int width, int height, QColor color);

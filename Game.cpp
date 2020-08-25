@@ -19,11 +19,12 @@ Game::Game(QWidget *) {
 
     viewWidth = 1600;
     viewHeight = 1000;
-    level = 1;
+
+    resetLevel();
 
     // create a scene
     scene = new QGraphicsScene();
-    scene->setBackgroundBrush(Qt::white);
+    scene->setBackgroundBrush(Qt::black);
     scene->setSceneRect(0,0, viewWidth, viewHeight);
 
     // add a view
@@ -58,7 +59,6 @@ void Game::start(){
     QTimer * timerCollision = new QTimer();
 
     for (int i = 0; i < 1600; i = i+100) {
-        qDebug() << winPointsArr << " " << winPointsArr.indexOf(i) << " " << i;
         if (winPointsArr.indexOf(i) == -1) {
             LoseRect * losePoint = new LoseRect(i);
             scene->addItem(losePoint);
@@ -69,7 +69,7 @@ void Game::start(){
     showLevel();
 
     // spawn enemies
-    connect(timer, SIGNAL(timeout()), frog, SLOT(spawnCar()));
+    spawnConnection = connect(timer, SIGNAL(timeout()), this, SLOT(spawnCar()));
     timer->start(2000 / level);
 
     // check collision
@@ -83,13 +83,12 @@ void Game::start(){
 }
 
 void Game::restartGame(){
-    level = 1;
+    resetLevel();
     scene->clear();
     start();
 }
 
 void Game::drawPanel(int x, int y, int width, int height, QColor color){
-    // draws a panel at the specified location with the specified properties
     QGraphicsRectItem* panel = new QGraphicsRectItem(x,y,width,height);
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
@@ -101,7 +100,7 @@ void Game::drawPanel(int x, int y, int width, int height, QColor color){
 void Game::showLevel () {
     QGraphicsTextItem* levelText = new QGraphicsTextItem(QString("Level: ") +  QString::number(level));
     QFont titleFont("comic sans",20);
-    levelText->setDefaultTextColor(Qt::black);
+    levelText->setDefaultTextColor(Qt::white);
     levelText->setFont(titleFont);
     int txPos = 20;
     int tyPos = 950;
@@ -112,9 +111,10 @@ void Game::showLevel () {
 void Game::displayGameOverWindow(QString textToDisplay){
     // disable all scene items
     scene->clear();
+    QObject::disconnect(spawnConnection);
 
     // pop up semi transparent panel
-    drawPanel(0,0, viewWidth, viewHeight,Qt::black);
+    drawPanel(0,0, viewWidth, viewHeight, Qt::black);
 
     // create playAgain button
     Button* playAgain = new Button(QString("Play Again"));
@@ -122,34 +122,48 @@ void Game::displayGameOverWindow(QString textToDisplay){
     scene->addItem(playAgain);
     connect(playAgain,SIGNAL(clicked()),this,SLOT(restartGame()));
 
-    // create text annoucning winner
-    QGraphicsTextItem* overText = new QGraphicsTextItem(textToDisplay);
-    overText->setPos(750,500);
-    scene->addItem(overText);
 
+    QGraphicsTextItem* overText = new QGraphicsTextItem(textToDisplay);
+    overText->setPos(630,500);
+    QFont textFont("comic sans",50);
+    overText->setFont(textFont);
+    scene->addItem(overText);
 }
 
 void Game::displayMainMenu(){
     // create the title text
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Hex Warz"));
+    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Frogger Game"));
     QFont titleFont("comic sans",50);
     titleText->setFont(titleFont);
     int txPos = this->width()/2 - titleText->boundingRect().width()/2;
-    int tyPos = 150;
-    titleText->setPos(txPos,tyPos);
+    titleText->setPos(txPos, 500);
     scene->addItem(titleText);
 
     // create the play button
     Button* playButton = new Button(QString("Play"));
     int bxPos = this->width()/2 - playButton->boundingRect().width()/2;
-    int byPos = 275;
-    playButton->setPos(bxPos,byPos);
+    playButton->setPos(bxPos, 650);
     connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
     scene->addItem(playButton);
 }
 
 void Game::runNextLevel() {
-    this->level = this->level + 1;
+    increaseLevel();
     scene->clear();
     start();
 }
+
+void Game::increaseLevel() {
+    level = level + 1;
+}
+
+void Game::resetLevel() {
+    level = 1;
+}
+
+void Game::spawnCar()
+{
+    Car * car = new Car();
+    scene->addItem(car);
+}
+

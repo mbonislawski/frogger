@@ -4,7 +4,7 @@
 #include <QGraphicsRectItem>
 #include <QObject>
 
-class Car: public QObject,public QGraphicsRectItem {
+class Car: public QObject, public QGraphicsRectItem {
     Q_OBJECT
 public:
     Car();

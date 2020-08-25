@@ -1,10 +1,8 @@
 #include "Car.h"
 #include <QTimer>
-#include <QGraphicsScene>
 #include <QList>
-#include <stdlib.h> // rand() -> really large int
+#include <stdlib.h>
 
-#include <QDebug>
 #include <Game.h>
 
 extern Game * game;
@@ -18,7 +16,7 @@ Car::Car(): QObject(), QGraphicsRectItem(){
     if (random_number == game->lastCarPos) {
         random_number = rand() % 5;
     } else {
-        this->position = random_number;
+        position = random_number;
         game->lastCarPos = random_number;
     }
 
@@ -31,12 +29,12 @@ Car::Car(): QObject(), QGraphicsRectItem(){
     if (random_size == game->lastCarType) {
         random_size = rand() % 3;
     } else {
-        this->size = random_size;
+        size = random_size;
         game->lastCarType = random_size;
     }
 
-    this->size = sizeArray[random_size];
-    setRect(-300,0, this->size ,100);
+    size = sizeArray[random_size];
+    setRect(-300,0, size ,100);
 
     if (random_size == 1) {
         this->setBrush(Qt::blue);
@@ -46,7 +44,6 @@ Car::Car(): QObject(), QGraphicsRectItem(){
         this->setBrush(Qt::magenta);
     }
 
-    // connect
     QTimer * timer = new QTimer(this);
     QTimer * timerCollision = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(move()));
@@ -56,7 +53,6 @@ Car::Car(): QObject(), QGraphicsRectItem(){
 }
 
 void Car::move() {
-    // move Car right
     setPos(x() + 1, y());
     if (pos().x() > 1800) {
         scene()->removeItem(this);
@@ -67,16 +63,13 @@ void Car::move() {
 void Car::checkCarsCollision() {
     // if Car collides with Car
     QList<QGraphicsItem *> colliding_items = scene()->collidingItems(this);
-//    bool hasCollision = false;
 
     for (int i = 0, n = colliding_items.size(); i < n;  ++i) {
-        // delete
         if (colliding_items[i]->flags().testFlag(ItemIsFocusable)) {
             game->displayGameOverWindow("Game is over");
         } else {
             scene()->removeItem(colliding_items[i]);
             delete colliding_items[i];
-            delete this;
         }
     }
 }

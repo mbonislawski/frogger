@@ -3,7 +3,7 @@
 #include <QBrush>
 
 Button::Button(QString name, QGraphicsItem *parent): QGraphicsRectItem(parent){
-    // draw the rect
+
     setRect(0,0,200,50);
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
@@ -20,20 +20,18 @@ Button::Button(QString name, QGraphicsItem *parent): QGraphicsRectItem(parent){
     setAcceptHoverEvents(true);
 }
 
-void Button::mousePressEvent(QGraphicsSceneMouseEvent *event){
+void Button::mousePressEvent(QGraphicsSceneMouseEvent *) {
     emit clicked();
 }
 
-void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *event){
-    // change color to cyan
+void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
     brush.setColor(Qt::cyan);
     setBrush(brush);
 }
 
-void Button::hoverLeaveEvent(QGraphicsSceneHoverEvent *event){
-    // change color to dark cyan
+void Button::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
     brush.setColor(Qt::darkCyan);

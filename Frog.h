@@ -10,8 +10,6 @@ public:
     Frog(int viewWidth, int viewHeight);
     void keyPressEvent(QKeyEvent * event);
     bool canMove = true;
-public slots:
-    void spawnCar();
 };
 
 #endif // Frog_H
