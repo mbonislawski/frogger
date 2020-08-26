@@ -2,7 +2,7 @@
 #include <QTimer>
 #include <QGraphicsScene>
 #include <QList>
-#include <stdlib.h> // rand() -> really large int
+#include <stdlib.h>
 #include <Car.h>
 #include <QDebug>
 #include <QGraphicsView>
@@ -11,8 +11,8 @@
 #include <LoseRect.h>
 #include "Button.h"
 #include <QGraphicsTextItem>
-#include <stdlib.h> // srand() and rand()
-#include <time.h> // time()
+#include <stdlib.h>
+#include <time.h>
 #include <QFont>
 #include <QDebug>
 
@@ -38,7 +38,6 @@ Game::Game(QWidget *) {
 }
 
 void Game::start(){
-    // clear the screen
     scene->clear();
     winPointsArr.remove(0, winPointsArr.size());
     startCounter = 6;
@@ -70,7 +69,7 @@ void Game::start(){
 
     showLevel();
 
-    // spawn enemies
+    // spawn cars
     spawnConnection = connect(timer, SIGNAL(timeout()), this, SLOT(spawnCar()));
     timer->start(2000 / level);
 
@@ -123,11 +122,11 @@ void Game::showCounter () {
 }
 
 void Game::displayGameOverWindow(QString textToDisplay){
-    // disable all scene items
+    // disable all connections
     scene->clear();
     QObject::disconnect(spawnConnection);
 
-    // pop up semi transparent panel
+    // pop up menu panel
     drawPanel(0,0, viewWidth, viewHeight, Qt::black);
 
     // create playAgain button
@@ -145,7 +144,6 @@ void Game::displayGameOverWindow(QString textToDisplay){
 }
 
 void Game::displayMainMenu(){
-    // create the title text
     QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Frogger Game"));
     QFont titleFont("comic sans",50);
     titleText->setFont(titleFont);
