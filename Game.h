@@ -12,7 +12,9 @@ public:
     Game(QWidget * parent=0);
     void displayMainMenu();
     void runNextLevel();
+    void showCounter();
     void showLevel();
+    void spawnFrog();
     void displayGameOverWindow(QString textToDisplay);
 
     QGraphicsScene * scene;
@@ -24,17 +26,20 @@ public:
     QVector<int> winPointsArr;
     int timerVal;
     QMetaObject::Connection spawnConnection;
+    QMetaObject::Connection startCountConnection;
+    int startCounter = 6;
+    QGraphicsTextItem* counterText;
 
 public slots:
+    void spawnCar();
     void restartGame();
     void start();
-    void increaseLevel();
-    void resetLevel();
-    void spawnCar();
+    void countStart();
 
 private:
+    void increaseLevel();
+    void resetLevel();
     void drawPanel(int x, int y, int width, int height, QColor color);
-
 };
 
 #endif // GAME_H

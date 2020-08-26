@@ -14,6 +14,7 @@
 #include <stdlib.h> // srand() and rand()
 #include <time.h> // time()
 #include <QFont>
+#include <QDebug>
 
 Game::Game(QWidget *) {
 
@@ -40,10 +41,11 @@ void Game::start(){
     // clear the screen
     scene->clear();
     winPointsArr.remove(0, winPointsArr.size());
+    startCounter = 6;
 
-    // create a player
-    Frog * frog = new Frog(this->viewWidth, this->viewHeight);
-    scene->addItem(frog);
+    QTimer * timerStart = new QTimer();
+    startCountConnection = connect(timerStart, SIGNAL(timeout()), this, SLOT(countStart()));
+    timerStart->start(1000);
 
     WinRect * winPoint1 = new WinRect();
     scene->addItem(winPoint1);
@@ -85,6 +87,7 @@ void Game::start(){
 void Game::restartGame(){
     resetLevel();
     scene->clear();
+    QObject::disconnect(spawnConnection);
     start();
 }
 
@@ -106,6 +109,17 @@ void Game::showLevel () {
     int tyPos = 950;
     levelText->setPos(txPos,tyPos);
     scene->addItem(levelText);
+}
+
+void Game::showCounter () {
+    counterText = new QGraphicsTextItem(QString("Start in: ") +  QString::number(startCounter));
+    QFont titleFont("comic sans",20);
+    counterText->setDefaultTextColor(Qt::white);
+    counterText->setFont(titleFont);
+    int txPos = 760;
+    int tyPos = 950;
+    counterText->setPos(txPos,tyPos);
+    scene->addItem(counterText);
 }
 
 void Game::displayGameOverWindow(QString textToDisplay){
@@ -148,6 +162,7 @@ void Game::displayMainMenu(){
 }
 
 void Game::runNextLevel() {
+    QObject::disconnect(spawnConnection);
     increaseLevel();
     scene->clear();
     start();
@@ -167,3 +182,25 @@ void Game::spawnCar()
     scene->addItem(car);
 }
 
+void Game::spawnFrog()
+{
+    Frog * frog = new Frog(this->viewWidth, this->viewHeight);
+    scene->addItem(frog);
+    scene->removeItem(counterText);
+}
+
+void Game::countStart() {
+    startCounter--;
+    if (startCounter < 5) {
+        scene->removeItem(counterText);
+        delete counterText;
+    }
+    showCounter();
+    if (startCounter == 0) {
+        // create a player
+        spawnFrog();
+        delete counterText;
+
+        QObject::disconnect(startCountConnection);
+    }
+}
