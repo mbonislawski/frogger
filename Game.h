@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QMouseEvent>
+#include <Level.h>
 
 class Game: public QGraphicsView {
     Q_OBJECT
@@ -18,9 +19,10 @@ public:
     void displayGameOverWindow(QString textToDisplay);
 
     QGraphicsScene * scene;
+    Level * level;
     int viewWidth;
     int viewHeight;
-    int level;
+//    int level;
     int lastCarPos = 0;
     int lastCarType = 0;
     QVector<int> winPointsArr;
@@ -37,8 +39,6 @@ public slots:
     void countStart();
 
 private:
-    void increaseLevel();
-    void resetLevel();
     void drawPanel(int x, int y, int width, int height, QColor color);
 };
 

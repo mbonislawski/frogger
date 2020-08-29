@@ -9,7 +9,6 @@ class Frog:public QObject, public QGraphicsRectItem {
 public:
     Frog(int viewWidth, int viewHeight);
     void keyPressEvent(QKeyEvent * event);
-    bool canMove = true;
 };
 
 #endif // Frog_H

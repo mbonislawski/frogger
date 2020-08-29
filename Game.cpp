@@ -4,7 +4,6 @@
 #include <QList>
 #include <stdlib.h>
 #include <Car.h>
-#include <QDebug>
 #include <QGraphicsView>
 #include <Frog.h>
 #include <WinRect.h>
@@ -14,14 +13,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <QFont>
-#include <QDebug>
+#include <Level.h>
 
 Game::Game(QWidget *) {
 
     viewWidth = 1600;
     viewHeight = 1000;
-
-    resetLevel();
 
     // create a scene
     scene = new QGraphicsScene();
@@ -34,10 +31,12 @@ Game::Game(QWidget *) {
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFixedSize(viewWidth, viewHeight);
 
+    level = new Level();
+
     show();
 }
 
-void Game::start(){
+void Game::start() {
     scene->clear();
     winPointsArr.remove(0, winPointsArr.size());
     startCounter = 6;
@@ -55,7 +54,6 @@ void Game::start(){
     WinRect * winPoint3 = new WinRect();
     scene->addItem(winPoint3);
 
-
     QTimer * timer = new QTimer();
     QTimer * timerCollision = new QTimer();
 
@@ -71,7 +69,7 @@ void Game::start(){
 
     // spawn cars
     spawnConnection = connect(timer, SIGNAL(timeout()), this, SLOT(spawnCar()));
-    timer->start(2000 / level);
+    timer->start(2000 / level->getLevel());
 
     // check collision
     connect(timerCollision, SIGNAL(timeout()), winPoint1, SLOT(checkCollision()));
@@ -84,7 +82,6 @@ void Game::start(){
 }
 
 void Game::restartGame(){
-    resetLevel();
     scene->clear();
     QObject::disconnect(spawnConnection);
     start();
@@ -100,7 +97,7 @@ void Game::drawPanel(int x, int y, int width, int height, QColor color){
 }
 
 void Game::showLevel () {
-    QGraphicsTextItem* levelText = new QGraphicsTextItem(QString("Level: ") +  QString::number(level));
+    QGraphicsTextItem* levelText = new QGraphicsTextItem(QString("Level: ") +  QString::number(level->getLevel()));
     QFont titleFont("comic sans",20);
     levelText->setDefaultTextColor(Qt::white);
     levelText->setFont(titleFont);
@@ -125,6 +122,7 @@ void Game::displayGameOverWindow(QString textToDisplay){
     // disable all connections
     scene->clear();
     QObject::disconnect(spawnConnection);
+    level->resetLevel();
 
     // pop up menu panel
     drawPanel(0,0, viewWidth, viewHeight, Qt::black);
@@ -161,17 +159,9 @@ void Game::displayMainMenu(){
 
 void Game::runNextLevel() {
     QObject::disconnect(spawnConnection);
-    increaseLevel();
+    level->increase();
     scene->clear();
     start();
-}
-
-void Game::increaseLevel() {
-    level = level + 1;
-}
-
-void Game::resetLevel() {
-    level = 1;
 }
 
 void Game::spawnCar()

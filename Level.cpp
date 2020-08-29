@@ -2,20 +2,23 @@
 #include <QFont>
 
 Level::Level(QGraphicsItem *parent): QGraphicsTextItem(parent){
-    // initialize the score to 0
-    level = 0;
+    resetLevel();
 
     // draw the text
-    setPlainText(QString("Score: ") + QString::number(level)); // Score: 0
-    setDefaultTextColor(Qt::blue);
+    setPlainText(QString("Score: ") + QString::number(level));
+    setDefaultTextColor(Qt::white);
     setFont(QFont("times",16));
 }
 
 void Level::increase(){
     level++;
-    setPlainText(QString("Level: ") + QString::number(level)); // Score: 1
+    setPlainText(QString("Score: ") + QString::number(level));
 }
 
 int Level::getLevel(){
     return level;
+}
+
+void Level::resetLevel() {
+    level = 1;
 }
