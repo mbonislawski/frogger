@@ -8,7 +8,6 @@ class Car: public QObject, public QGraphicsRectItem {
     Q_OBJECT
 public:
     Car();
-    int position;
 public slots:
     void move();
     void checkCarsCollision();
@@ -16,6 +15,7 @@ private:
     QVector<int> posArray = {150, 300, 450, 600, 750};
     QVector<int> sizeArray = {100, 150, 200};
     int size;
+    int position;
     void setColor();
     int getSize();
     void setSize(int size);
